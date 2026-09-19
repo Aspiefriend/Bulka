@@ -1,0 +1,20 @@
+# Зависимости
+node_modules/
+
+# Секреты (НЕ в GitHub!)
+.env
+
+# База данных
+*.db
+*.db-journal
+
+# Логи
+*.log
+npm-debug.log*
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
