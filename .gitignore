@@ -7,8 +7,8 @@ node_modules/
 # База данных
 *.db
 *.db-journal
+*.db-shm
 *.db-wal
-*.db-journal
 
 # Логи
 *.log
