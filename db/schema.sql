@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS products (
     price INTEGER NOT NULL,  -- цена в рублях
     icon TEXT,
     id_category INTEGER,
+    sales_count INTEGER NOT NULL DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_category) REFERENCES categories(id_category) ON DELETE SET NULL
 );
@@ -133,6 +134,7 @@ CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(id_user);
 CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(id_order);
 CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews(id_product);
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(id_user);
+CREATE INDEX IF NOT EXISTS idx_products_sales ON products(sales_count DESC);
 
 
 
