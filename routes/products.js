@@ -15,9 +15,29 @@ const PRODUCT_SELECT = `
 
 router.get('/', (req, res) => {
   try {
-    const products = db
-      .prepare(`${PRODUCT_SELECT} ORDER BY p.id_product`)
-      .all();
+    const { category } = req.query;
+
+    let query = `${PRODUCT_SELECT}`;
+    const params = [];
+
+    if (category) {
+      const categoryId = Number(category);
+
+      if (!Number.isInteger(categoryId) || categoryId <= 0) {
+        return res.status(400).json({
+          error: { message: 'Invalid category id', code: 'VALIDATION' },
+        });
+      }
+
+      query += ' WHERE p.id_category = ?';
+      params.push(categoryId);
+    }
+
+    query += ' ORDER BY p.id_product';
+
+    const products = db.prepare(query).all(...params);
+    res.json({ data: products });
+
 
     res.json({ data: products });
   } catch (err) {
@@ -28,14 +48,14 @@ router.get('/', (req, res) => {
   }
 });
 
-router.get('/hits', (req,res)=>{
-    try {
-        const limit = Number(req.query.limit) || 4
-        if(!Number.isInteger(limit)|| limit <= 0 || limit > 20) {
-            return res.status(400).json({error: {message : 'Invalid limit', code:'VALIDATION'}})
-            
-        }
-        const products = db.prepare(`
+router.get('/hits', (req, res) => {
+  try {
+    const limit = Number(req.query.limit) || 4
+    if (!Number.isInteger(limit) || limit <= 0 || limit > 20) {
+      return res.status(400).json({ error: { message: 'Invalid limit', code: 'VALIDATION' } })
+
+    }
+    const products = db.prepare(`
         SELECT
           p.id_product, p.name, p.description, p.price, p.icon, p.sales_count,
           p.id_category,
@@ -47,13 +67,13 @@ router.get('/hits', (req,res)=>{
         LIMIT ?
       `).all(limit)
 
-      res.json({data: products})
-    }
-    catch (err) {
-        console.error('[products] GET /hits',err)
-        res.status(500).json({error : {message:'Internal server error' , code : 'INTERNAL'}})
+    res.json({ data: products })
+  }
+  catch (err) {
+    console.error('[products] GET /hits', err)
+    res.status(500).json({ error: { message: 'Internal server error', code: 'INTERNAL' } })
 
-    }
+  }
 
 
 });
