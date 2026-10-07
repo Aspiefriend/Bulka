@@ -1,5 +1,5 @@
 INSERT INTO categories (name, icon) VALUES
-    ('Хлеб', 'bread'),
+    ('Хлеб', 'wheat'),
     ('Выпечка', 'croissant'),
     ('Пироги', 'pie-chart'),
     ('Сладкое', 'cake'),

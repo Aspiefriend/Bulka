@@ -1,37 +1,29 @@
-import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomePage from './pages/HomePage';
+import CatalogPage from './pages/CatalogPage';
+import ProductPage from './pages/ProductPage';
 
 function App() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetch('/api/products/hits')
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <div style={{ padding: 20 }}>Загрузка...</div>;
-  if (error) return <div style={{ padding: 20 }}>Ошибка: {error}</div>;
-
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Хиты</h1>
-      <ul>
-        {products.map((p) => (
-          <li key={p.id_product}>
-            {p.name} — {p.price} ₽ (продано: {p.sales_count})
-          </li>
-        ))}
-      </ul>
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        <Header />
+        <main className="app__main">
+            <div className="container">
+              <Routes>
+                 <Route path="/" element={<HomePage />} />
+                 <Route path="/catalog" element={<CatalogPage />} />
+                <Route path="/product/:id" element={<ProductPage />} />
+             </Routes>
+            \</div>
+        </main>
+        
+ 
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 

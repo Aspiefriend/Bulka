@@ -1,0 +1,54 @@
+.header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header__container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.header__logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);          /* ← чёрный, не акцент */
+  letter-spacing: -0.3px;
+}
+
+.header__nav {
+  display: flex;
+  gap: 28px;
+  flex: 1;
+}
+
+.header__nav a {
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: 15px;
+  transition: color 0.15s;
+}
+
+.header__nav a:hover {
+  color: var(--color-primary);
+}
+
+.header__login {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px 22px;
+  border-radius: var(--radius);
+  font-weight: 500;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.header__login:hover {
+  background: var(--color-primary-dark);
+}
