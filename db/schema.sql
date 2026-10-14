@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS cart_items (
     id_cart_item INTEGER PRIMARY KEY AUTOINCREMENT,
     id_user INTEGER  NOT NULL,
     id_product INTEGER NOT NULL,
-    quantity INTEGER OT NULL DEFAULT 1,
+    quantity INTEGER NOT NULL DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
     FOREIGN KEY (id_product) REFERENCES products(id_product) ON DELETE CASCADE,

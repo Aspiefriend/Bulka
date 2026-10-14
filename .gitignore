@@ -1,33 +1,23 @@
-# Зависимости
 node_modules/
 client/node_modules/
-
-# Сборка
 client/dist/
 
-# Секреты
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
-# База данных
 *.db
 *.db-journal
 *.db-shm
 *.db-wal
 
-# Логи
 *.log
 npm-debug.log*
 
-# Редакторы
 .vscode/
 .idea/
-
-# OS
 .DS_Store
 Thumbs.db
 
-# Кэш сборки
 .cache/
 .vite/

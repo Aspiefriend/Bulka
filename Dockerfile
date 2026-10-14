@@ -1,31 +1,35 @@
-# Базовый образ — Node.js 24 (slim — с базовыми утилитами)
+# ─── Stage 1: сборка фронта ───
+FROM node:24-slim AS client-build
+
+WORKDIR /client
+
+COPY client/package*.json ./
+RUN npm ci
+
+COPY client/ ./
+RUN npm run build
+
+# ─── Stage 2: финальный образ ───
 FROM node:24-slim
 
-# Устанавливаем Python и компилятор для better-sqlite3
 RUN apt-get update && apt-get install -y \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+    python3 make g++ \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-# Рабочая директория
 WORKDIR /app
 
-# Копируем зависимости
 COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Устанавливаем зависимости
-RUN npm install --omit=dev
-
-# Копируем проект
 COPY . .
 
-# Переменные окружения
+# Собранный фронт из первой стадии
+COPY --from=client-build /client/dist ./client/dist
+
 ENV PORT=3000
 ENV NODE_ENV=production
+ENV DB_PATH=/app/data/bulka.db
 
-# Открываем порт
 EXPOSE 3000
 
-# Запуск
 CMD ["sh", "-c", "node init-db.js && node server.js"]

@@ -1,36 +1,19 @@
-# Зависимости — пересоберутся внутри
-node_modules/
-client/node_modules/
-
-# Сборка — соберётся внутри
-client/dist/
-
-# Секреты — не в образ
+node_modules
+client/node_modules
+client/dist
+.git
+.gitignore
+*.md
 .env
 .env.*
-
-# БД — создастся init-db.js
+npm-debug.log
 *.db
 *.db-journal
 *.db-shm
 *.db-wal
-
-# Git — история не нужна
-.git/
-.gitignore
-
-# Документация и редакторы
-*.md
-.vscode/
-.idea/
-
-# CI — не нужен в образе
-.github/
-
-# Сам Dockerfile и dockerignore
 Dockerfile
 .dockerignore
-
-# Логи
-*.log
-npm-debug.log*
+.vscode
+.idea
+.cache
+.vite
