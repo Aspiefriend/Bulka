@@ -1,18 +1,21 @@
 require("dotenv").config();
 const path = require("path");
-
 const express = require("express");
 const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const isProd = process.env.NODE_ENV === "production";
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-  }),
-);
+if (!isProd) {
+  app.use(
+    cors({
+      origin: process.env.CLIENT_URL || "http://localhost:5173",
+      credentials: true,
+    }),
+  );
+}
+
 app.use(express.json());
 
 const authRoutes = require("./routes/auth");
@@ -24,7 +27,6 @@ app.use("/api/categories", categoriesRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/cart", cartRoutes);
 
-// Root
 app.get("/", (req, res) => {
   res.json({
     name: "Bulka API",
@@ -40,15 +42,25 @@ app.get("/", (req, res) => {
   });
 });
 
-// 404 for API
+if (isProd) {
+  const clientDist = path.join(__dirname, "client", "dist");
+
+  app.use(express.static(clientDist));
+
+  app.use((req, res, next) => {
+    if (req.method !== "GET") return next();
+    if (req.path.startsWith("/api")) return next();
+    res.sendFile(path.join(clientDist, "index.html"));
+  });
+}
+
 app.use((req, res) => {
   res.status(404).json({
     error: { message: "Not found", code: "NOT_FOUND" },
   });
 });
 
-// Error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error("[server] error:", err);
   res.status(err.status || 500).json({
     error: {

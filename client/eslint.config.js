@@ -4,10 +4,12 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
+  {
+    ignores: ['dist/**', 'node_modules/**'],
+  },
   js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['dist/**', 'node_modules/**'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -32,7 +34,6 @@ export default [
       'no-console': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
-
       'react-hooks/set-state-in-effect': 'off',
       'react-hooks/static-components': 'off',
     },
