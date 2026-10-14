@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS products (
     id_product INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     description TEXT,
+    full_description TEXT,
     price INTEGER NOT NULL,  -- цена в рублях
     icon TEXT,
     id_category INTEGER,
@@ -126,6 +127,18 @@ CREATE TABLE IF NOT EXISTS notifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS cart_items (
+    id_cart_item INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_user INTEGER  NOT NULL,
+    id_product INTEGER NOT NULL,
+    quantity INTEGER OT NULL DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+    FOREIGN KEY (id_product) REFERENCES products(id_product) ON DELETE CASCADE,
+    UNIQUE(id_user,id_product)
+
+);
 -- =============================================
 -- Индексы
 -- =============================================
@@ -135,6 +148,7 @@ CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(id_order);
 CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews(id_product);
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(id_user);
 CREATE INDEX IF NOT EXISTS idx_products_sales ON products(sales_count DESC);
+CREATE INDEX IF NOT EXISTS idx_cart_items_user ON cart_items(id_user);
 
 
 

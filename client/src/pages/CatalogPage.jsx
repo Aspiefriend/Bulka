@@ -7,7 +7,7 @@ import { api } from '../api/client';
 import ProductCard from '../components/ProductCard';
 import './CatalogPage.css';
 function CatalogPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const categoryid = searchParams.get('category');
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -20,8 +20,6 @@ function CatalogPage() {
 
   useEffect(() => {
     const url = categoryid ? `/products?category=${categoryid}` : '/products';
-
-
     api
       .get(url)
       .then((res) => {

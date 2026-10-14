@@ -1,8 +1,14 @@
 # Зависимости
 node_modules/
+client/node_modules/
 
-# Секреты (НЕ в GitHub!)
+# Сборка
+client/dist/
+
+# Секреты
 .env
+.env.local
+.env.*.local
 
 # База данных
 *.db
@@ -14,9 +20,14 @@ node_modules/
 *.log
 npm-debug.log*
 
-# VS Code
+# Редакторы
 .vscode/
+.idea/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Кэш сборки
+.cache/
+.vite/

@@ -5,7 +5,7 @@ const router = express.Router();
 
 const PRODUCT_SELECT = `
   SELECT
-    p.id_product, p.name, p.description, p.price, p.icon,
+    p.id_product, p.name, p.description, p.full_description, p.price, p.icon,
     p.id_category,
     c.name AS category_name,
     c.icon AS category_icon
@@ -39,7 +39,6 @@ router.get('/', (req, res) => {
     res.json({ data: products });
 
 
-    res.json({ data: products });
   } catch (err) {
     console.error('[products] GET /', err);
     res.status(500).json({

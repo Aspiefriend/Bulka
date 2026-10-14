@@ -6,7 +6,7 @@ import './CartPage.css';
 
 function CartPage() {
   const { user } = useAuth();
-  const { cart, count, loading, pendingIds, updateQuantity, removeFromCart } =
+  const { cart, loading, pendingIds, updateQuantity, removeFromCart } =
     useCart();
 
   const totalSum = cart.reduce(
