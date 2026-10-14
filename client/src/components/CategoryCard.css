@@ -12,6 +12,16 @@
   transition: all 0.15s;
 }
 
+.category-card--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.category-card--active .category-card__icon {
+  color: white;
+  background: var(--color-primary);
+}
+
 .category-card:hover {
   border-color: var(--color-primary);
   transform: translateY(-2px);

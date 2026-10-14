@@ -1,0 +1,29 @@
+.catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.catalog__categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.catalog__products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.catalog__section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.catalog__status {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--color-text-muted);
+}
