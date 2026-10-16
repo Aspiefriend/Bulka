@@ -26,7 +26,7 @@ function CategoryCard({ category, isActive = false }) {
       <div className="category-card__icon">
         <Icon size={28} strokeWidth={1.5} />
       </div>
-      <span className="category-card__name">{category.name}</span>
+      <h3 className="category-card__name">{category.name}</h3>
     </Link>
   );
 }

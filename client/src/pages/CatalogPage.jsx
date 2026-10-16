@@ -32,8 +32,23 @@ function CatalogPage() {
       });
   }, [categoryid]);
 
-  if (loading) return <p className="catalog__Status"> Загрузка...</p>;
-  if (error) return <p className="catalog__status"> Ошибка {error}</p>;
+  if (loading) {
+    return (
+      <div className="catalog">
+        <h1 className="catalog__title">Каталог</h1>
+        <p className="catalog__status">Загрузка каталога...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="catalog">
+        <h1 className="catalog__title">Каталог</h1>
+        <p className="catalog__status"> Ошибка: {error}</p>
+      </div>
+    );
+  }
 
   const activeCategoryName = categories.find(
     (category) => category.id_category === Number(categoryid)
@@ -41,6 +56,7 @@ function CatalogPage() {
 
   return (
     <div className="catalog">
+      <h1 className="catalog__title">Каталог</h1>
       <section className="catalog__section">
         <h2>Категории</h2>
         <div className="catalog__categories">

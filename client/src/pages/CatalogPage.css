@@ -4,6 +4,13 @@
   gap: 40px;
 }
 
+.catalog__title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
+}
+
 .catalog__categories {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));

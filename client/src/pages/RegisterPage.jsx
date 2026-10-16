@@ -13,7 +13,14 @@ function RegisterPage() {
   const [error, setError] = useState('');
   const [submiting, setSubmitting] = useState(false);
 
-  if (loading) return <p> Загрузка.....</p>;
+  if (loading) {
+    return (
+      <div className="login">
+        <h1 className="login__title">Вход</h1>
+        <p className="login__status">Загрузка...</p>
+      </div>
+    );
+  }
   if (user) return <Navigate to="/" replace />;
 
   async function handleSubmit(e) {

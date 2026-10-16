@@ -50,9 +50,31 @@ function ProductPage() {
     }
   }
 
-  if (loading) return <p className="product__status">Загрузка...</p>;
-  if (error) return <p className="product__status">Ошибка: {error}</p>;
-  if (!product) return <p className="product__status">Товар не найден</p>;
+  if (loading) {
+    return (
+      <div className="product-page">
+        <h1 className="product-page__status-title">Загрузка товара...</h1>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="product-page">
+        <h1>Ошибка загрузки</h1>
+        <p>{error}</p>
+        <Link to="/catalog">Вернуться в каталог</Link>
+      </div>
+    );
+  }
+  if (!product) {
+    return (
+      <div className="product-page">
+        <h1>Товар не найден</h1>
+        <p>Такого товара нет или он был удалён.</p>
+        <Link to="/catalog">Вернуться в каталог</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="product-page">
@@ -66,7 +88,12 @@ function ProductPage() {
         <div className="product__info">
           <h1 className="product__name">{product.name}</h1>
           <p className="product__description">{product.full_description}</p>
-          <span className="product__category">{product.category_name}</span>
+          <Link
+            to={`/catalog?category=${product.id_category}`}
+            className="product__category"
+          >
+            {product.category_name}
+          </Link>
           <div className="product__price">{product.price} ₽</div>
 
           {quantity === 0 ? (

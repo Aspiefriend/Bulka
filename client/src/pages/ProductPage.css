@@ -61,6 +61,7 @@
   font-size: 14px;
   font-weight: 500;
   width: fit-content;
+  text-decoration: none;
 }
 
 .product__description {
