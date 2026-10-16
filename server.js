@@ -36,20 +36,18 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/bakeries", bakeriesRoutes);
 app.use("/api/orders", orderRoutes);
 
-app.get("/", (req, res) => {
-  res.json({
-    name: "Bulka API",
-    version: "1.0.0",
-    endpoints: [
-      "POST /api/auth/register",
-      "POST /api/auth/login",
-      "GET /api/auth/me",
-      "GET /api/categories",
-      "GET /api/products",
-      "GET /api/products/:id",
-    ],
+if (!isProd) {
+  app.get("/", (req, res) => {
+    res.json({
+      name: "Bulka API",
+      version: "1.0.0",
+      endpoints: [
+        "POST /api/auth/register",
+        // ...
+      ],
+    });
   });
-});
+}
 
 if (isProd) {
   const clientDist = path.join(__dirname, "client", "dist");
