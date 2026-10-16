@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 function ProfilePage() {
   const { user, loading } = useAuth();
