@@ -1,0 +1,11 @@
+# Правила для всех роботов
+User-agent: *
+Disallow: /profile/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+
+Sitemap: https://example.com/sitemap.xml

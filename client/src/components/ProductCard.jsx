@@ -33,13 +33,7 @@ function ProductCard({ product }) {
       updateQuantity(product.id_product, quantity - 1);
     }
   }
-  console.log(
-    'product.id_product =',
-    product.id_product,
-    typeof product.id_product,
-    '| cart ids =',
-    cart.map((i) => `${i.id_product}(${typeof i.id_product})`)
-  );
+
   return (
     <div className="product-card">
       <Link

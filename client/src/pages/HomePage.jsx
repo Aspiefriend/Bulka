@@ -23,32 +23,50 @@ function HomePage() {
       });
   }, []);
 
-  if (loading) return <p className="home__status">Загрузка...</p>;
-  if (error) return <p className="home__status">Ошибка: {error}</p>;
+  if (loading) {
+    return (
+      <>
+        <title>Загрузка... — Булка</title>
+        <meta name="robots" content="noindex" />
+        <p className="home__status">Загрузка...</p>
+      </>
+    );
+  }
+  if (error) {
+    return (
+      <>
+        <title>Ошибка — Булка</title>
+        <meta name="robots" content="noindex" />
+        <p className="home__status">Ошибка {error}</p>
+      </>
+    );
+  }
 
   return (
-    <div className="home">
-      <Hero></Hero>
-      <p className="home__lead">Свежая выпечка с доставкой</p>
+    <>
+      <title>Главная — Булка</title>
+      <div className="home">
+        <Hero></Hero>
 
-      <section className="home__section">
-        <h2>Категории</h2>
-        <div className="home__categories">
-          {categories.map((category) => (
-            <CategoryCard key={category.id_category} category={category} />
-          ))}
-        </div>
-      </section>
+        <section className="home__section">
+          <h2>Категории</h2>
+          <div className="home__categories">
+            {categories.map((category) => (
+              <CategoryCard key={category.id_category} category={category} />
+            ))}
+          </div>
+        </section>
 
-      <section className="home__section">
-        <h2>Хиты</h2>
-        <div className="home__grid">
-          {hits.map((product) => (
-            <ProductCard key={product.id_product} product={product} />
-          ))}
-        </div>
-      </section>
-    </div>
+        <section className="home__section">
+          <h2>Хиты</h2>
+          <div className="home__grid">
+            {hits.map((product) => (
+              <ProductCard key={product.id_product} product={product} />
+            ))}
+          </div>
+        </section>
+      </div>
+    </>
   );
 }
 

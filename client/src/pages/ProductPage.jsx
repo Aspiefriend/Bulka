@@ -50,60 +50,102 @@ function ProductPage() {
     }
   }
 
-  if (loading) return <p className="product__status">Загрузка...</p>;
-  if (error) return <p className="product__status">Ошибка: {error}</p>;
-  if (!product) return <p className="product__status">Товар не найден</p>;
+  if (loading) {
+    return (
+      <>
+        <title>Загрузка... — Булка</title>
+        <meta name="robots" content="noindex" />
+        <div className="product-page">
+          <h1 className="product-page__status-title">Загрузка товара...</h1>
+        </div>
+      </>
+    );
+  }
+  if (error) {
+    return (
+      <>
+        <title>Ошибка... — Булка</title>
+        <meta name="robots" content="noindex" />
+        <div className="product-page">
+          <h1>Ошибка загрузки</h1>
+          <p>{error}</p>
+          <Link to="/catalog">Вернуться в каталог</Link>
+        </div>
+      </>
+    );
+  }
+  if (!product) {
+    return (
+      <>
+        <title>Такого товара не существует — Булка</title>
+        <meta name="robots" content="noindex" />
+        <div className="product-page">
+          <h1>Товар не найден</h1>
+          <p>Такого товара нет или он был удалён.</p>
+          <Link to="/catalog">Вернуться в каталог</Link>
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div className="product-page">
-      <Link to="/catalog" className="product-page__back">
-        <ArrowLeft size={16} />
-        Назад к каталогу
-      </Link>
+    <>
+      <title>{product.name} — Булка</title>
+      <div className="product-page">
+        <Link to="/catalog" className="product-page__back">
+          <ArrowLeft size={16} />
+          Назад к каталогу
+        </Link>
 
-      <div className="product">
-        <div className="product__image">{/* картинка или заглушка */}</div>
-        <div className="product__info">
-          <h1 className="product__name">{product.name}</h1>
-          <p className="product__description">{product.full_description}</p>
-          <span className="product__category">{product.category_name}</span>
-          <div className="product__price">{product.price} ₽</div>
-
-          {quantity === 0 ? (
-            <button
-              type="button"
-              className="product__button"
-              onClick={handleAdd}
-              disabled={cartLoading || isPending}
+        <div className="product">
+          <div className="product__image">{/* картинка или заглушка */}</div>
+          <div className="product__info">
+            <h1 className="product__name">{product.name}</h1>
+            <p className="product__description">{product.full_description}</p>
+            <Link
+              to={`/catalog?category=${product.id_category}`}
+              className="product__category"
             >
-              В корзину
-            </button>
-          ) : (
-            <div className="product__counter">
+              {product.category_name}
+            </Link>
+            <div className="product__price">{product.price} ₽</div>
+
+            {quantity === 0 ? (
               <button
                 type="button"
-                className="product__counter-btn"
-                onClick={handleDecrease}
+                className="product__button"
+                onClick={handleAdd}
                 disabled={cartLoading || isPending}
-                aria-label="Уменьшить количество"
               >
-                <Minus size={20} />
+                В корзину
               </button>
-              <span className="product__counter-value">{quantity}</span>
-              <button
-                type="button"
-                className="product__counter-btn"
-                onClick={handleIncrease}
-                disabled={cartLoading || isPending}
-                aria-label="Увеличить количество"
-              >
-                <Plus size={20} />
-              </button>
-            </div>
-          )}
+            ) : (
+              <div className="product__counter">
+                <button
+                  type="button"
+                  className="product__counter-btn"
+                  onClick={handleDecrease}
+                  disabled={cartLoading || isPending}
+                  aria-label="Уменьшить количество"
+                >
+                  <Minus size={20} />
+                </button>
+                <span className="product__counter-value">{quantity}</span>
+                <button
+                  type="button"
+                  className="product__counter-btn"
+                  onClick={handleIncrease}
+                  disabled={cartLoading || isPending}
+                  aria-label="Увеличить количество"
+                >
+                  <Plus size={20} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

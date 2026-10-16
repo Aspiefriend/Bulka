@@ -17,30 +17,37 @@ if (!isProd) {
 }
 
 app.use(express.json());
+app.use("/api", (req, res, next) => {
+  res.set("X-Robots-Tag", "noindex, nofollow");
+  next();
+});
 
 const authRoutes = require("./routes/auth");
 const categoriesRoutes = require("./routes/categories");
 const productsRoutes = require("./routes/products");
 const cartRoutes = require("./routes/cart");
+const orderRoutes = require("./routes/orders");
+
+const bakeriesRoutes = require("./routes/bakeries");
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/bakeries", bakeriesRoutes);
+app.use("/api/orders", orderRoutes);
 
-app.get("/", (req, res) => {
-  res.json({
-    name: "Bulka API",
-    version: "1.0.0",
-    endpoints: [
-      "POST /api/auth/register",
-      "POST /api/auth/login",
-      "GET /api/auth/me",
-      "GET /api/categories",
-      "GET /api/products",
-      "GET /api/products/:id",
-    ],
+if (!isProd) {
+  app.get("/", (req, res) => {
+    res.json({
+      name: "Bulka API",
+      version: "1.0.0",
+      endpoints: [
+        "POST /api/auth/register",
+        // ...
+      ],
+    });
   });
-});
+}
 
 if (isProd) {
   const clientDist = path.join(__dirname, "client", "dist");
