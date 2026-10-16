@@ -34,19 +34,27 @@ function CatalogPage() {
 
   if (loading) {
     return (
-      <div className="catalog">
-        <h1 className="catalog__title">Каталог</h1>
-        <p className="catalog__status">Загрузка каталога...</p>
-      </div>
+      <>
+        <title>Загрузка... — Булка</title>
+        <meta name="robots" content="noindex" />
+        <div className="catalog">
+          <h1 className="catalog__title">Каталог</h1>
+          <p className="catalog__status">Загрузка каталога...</p>
+        </div>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div className="catalog">
-        <h1 className="catalog__title">Каталог</h1>
-        <p className="catalog__status"> Ошибка: {error}</p>
-      </div>
+      <>
+        <title>Ошибка — Булка</title>
+        <meta name="robots" content="noindex" />
+        <div className="catalog">
+          <h1 className="catalog__title">Каталог</h1>
+          <p className="catalog__status"> Ошибка: {error}</p>
+        </div>
+      </>
     );
   }
 
@@ -55,39 +63,42 @@ function CatalogPage() {
   );
 
   return (
-    <div className="catalog">
-      <h1 className="catalog__title">Каталог</h1>
-      <section className="catalog__section">
-        <h2>Категории</h2>
-        <div className="catalog__categories">
-          <Link
-            to="/catalog"
-            className={`category-card ${!categoryid ? 'category-card--active' : ''}`}
-          >
-            <div className="category-card__icon">
-              <LayoutGrid size={28} strokeWidth={1.5}></LayoutGrid>
-            </div>
-            <span className="category-card__name">Все</span>
-          </Link>
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id_category}
-              category={category}
-              isActive={category.id_category === Number(categoryid)}
-            />
-          ))}
-        </div>
-      </section>
+    <>
+      <title>Каталог — Булка</title>
+      <div className="catalog">
+        <h1 className="catalog__title">Каталог</h1>
+        <section className="catalog__section">
+          <h2>Категории</h2>
+          <div className="catalog__categories">
+            <Link
+              to="/catalog"
+              className={`category-card ${!categoryid ? 'category-card--active' : ''}`}
+            >
+              <div className="category-card__icon">
+                <LayoutGrid size={28} strokeWidth={1.5}></LayoutGrid>
+              </div>
+              <span className="category-card__name">Все</span>
+            </Link>
+            {categories.map((category) => (
+              <CategoryCard
+                key={category.id_category}
+                category={category}
+                isActive={category.id_category === Number(categoryid)}
+              />
+            ))}
+          </div>
+        </section>
 
-      <section className="catalog__section">
-        <h2>{activeCategoryName?.name || 'Все товары'}</h2>
-        <div className="catalog__products">
-          {products.map((product) => (
-            <ProductCard key={product.id_product} product={product} />
-          ))}
-        </div>
-      </section>
-    </div>
+        <section className="catalog__section">
+          <h2>{activeCategoryName?.name || 'Все товары'}</h2>
+          <div className="catalog__products">
+            {products.map((product) => (
+              <ProductCard key={product.id_product} product={product} />
+            ))}
+          </div>
+        </section>
+      </div>
+    </>
   );
 }
 
