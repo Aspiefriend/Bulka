@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Package } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import './Header.css';
@@ -21,6 +21,15 @@ function Header() {
         </nav>
 
         <div className="header__actions">
+          {user && (
+            <Link
+              to="/orders"
+              className="header__orders"
+              aria-label="Мои заказы"
+            >
+              <Package size={22} />
+            </Link>
+          )}
           <Link to="/cart" className="header__cart">
             <ShoppingCart size={22} />
             {count > 0 && <span className="header__cart-badge">{count}</span>}

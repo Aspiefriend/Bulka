@@ -108,3 +108,16 @@
   justify-content: center;
   line-height: 1;
 }
+.header__orders {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 6px;
+  transition: color 0.15s;
+}
+
+.header__orders:hover {
+  color: var(--color-primary);
+}
