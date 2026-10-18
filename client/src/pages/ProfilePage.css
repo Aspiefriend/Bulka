@@ -1,0 +1,25 @@
+.profile {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.profile__title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
+}
+
+.profile__status {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  padding: 20px 0;
+}
+
+.profile__info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 16px;
+  color: var(--color-text);
+}
