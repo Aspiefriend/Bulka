@@ -1,0 +1,222 @@
+.order-detail {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.order-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  width: fit-content;
+  transition: color 0.15s;
+}
+
+.order-detail__back:hover {
+  color: var(--color-primary);
+}
+
+.order-detail__title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.order-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.order-detail__date {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+/* ─── Статусы ─── */
+.order-detail__status {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.order-detail__status--new,
+.order-detail__status--accepted {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.order-detail__status--cooking,
+.order-detail__status--delivering {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.order-detail__status--done {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.order-detail__status--cancelled {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* ─── Секции ─── */
+.order-detail__section {
+  padding: 16px 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-detail__section h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: var(--color-text);
+}
+
+.order-detail__section p {
+  font-size: 15px;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+/* ─── Состав заказа ─── */
+.order-detail__items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order-detail__item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.order-detail__item:last-child {
+  border-bottom: none;
+}
+
+.order-detail__item span:first-child {
+  color: var(--color-text);
+}
+
+.order-detail__item span:not(:first-child) {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.order-detail__item span:last-child {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.order-detail__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 12px;
+  margin-top: 8px;
+  border-top: 2px solid var(--color-border);
+  font-size: 16px;
+  color: var(--color-text-muted);
+}
+
+.order-detail__total span:last-child {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* ─── Кнопка отмены и ошибка ─── */
+.order-detail__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.order-detail__action-error {
+  padding: 10px 14px;
+  background: #fdecea;
+  color: #c0392b;
+  border-radius: var(--radius);
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.order-detail__cancel {
+  padding: 12px 24px;
+  background: transparent;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.order-detail__cancel:hover:not(:disabled) {
+  background: #c0392b;
+  color: white;
+}
+
+.order-detail__cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Ошибки загрузки ─── */
+.order-detail__error {
+  color: #c0392b;
+  font-size: 15px;
+  padding: 16px 0;
+}
+
+/* ─── Адаптив ─── */
+@media (max-width: 640px) {
+  .order-detail {
+    padding: 0 16px;
+  }
+
+  .order-detail__title {
+    font-size: 24px;
+  }
+
+  .order-detail__item {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  .order-detail__item span:nth-child(2) {
+    grid-column: 1 / -1;
+    font-size: 13px;
+  }
+}
