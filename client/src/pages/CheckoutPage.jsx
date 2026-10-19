@@ -62,6 +62,12 @@ function CheckoutPage() {
 
       const res = await api.post('/orders', payload);
       const id_order = res.data.id_order;
+      if (paymentMethod === 'online') {
+        const payRes = await api.post('/payments', { orderId: id_order });
+        window.location.href = payRes.data.confirmation_url;
+      } else {
+        navigate(`/orders/${id_order}`);
+      }
 
       clearCart();
       navigate(`/orders/${id_order}`);

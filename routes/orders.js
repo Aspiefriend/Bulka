@@ -98,6 +98,8 @@ router.post("/", (req, res) => {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
+    const initialPaymentStatus =
+      payment_method === "online" ? "pending" : "succeeded";
 
     const createOrder = db.transaction(() => {
       const orderResult = db
@@ -105,9 +107,9 @@ router.post("/", (req, res) => {
           `
         INSERT INTO orders (
           id_user, status, total, address, id_bakery,
-          delivery_method, payment_method, comment
+          delivery_method, payment_method, payment_status, comment
         )
-        VALUES (?, 'new', ?, ?, ?, ?, ?, ?)
+        VALUES (?, 'new', ?, ?, ?, ?, ?, ?, ?)
       `,
         )
         .run(
@@ -117,6 +119,7 @@ router.post("/", (req, res) => {
           finalBakeryId,
           delivery_method,
           payment_method,
+          initialPaymentStatus,
           comment ? comment.trim() : null,
         );
 

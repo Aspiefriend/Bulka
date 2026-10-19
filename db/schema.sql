@@ -64,16 +64,32 @@ CREATE TABLE IF NOT EXISTS orders (
     id_order INTEGER PRIMARY KEY AUTOINCREMENT,
     id_user INTEGER NOT NULL,
     status TEXT NOT NULL DEFAULT 'new'
-    CHECK (status IN ('new', 'accepted', 'cooking', 'delivering', 'done', 'cancelled')),
+        CHECK (status IN ('new', 'accepted', 'cooking', 'delivering', 'done', 'cancelled')),
     total INTEGER NOT NULL,
     address TEXT,
+    id_bakery INTEGER,
     delivery_method TEXT NOT NULL DEFAULT 'delivery'
-    CHECK(delivery_method IN('delivery','pickup')),
+        CHECK(delivery_method IN('delivery','pickup')),
     payment_method TEXT NOT NULL DEFAULT 'card'
-    CHECK(payment_method IN('card','online','cash')),
+        CHECK(payment_method IN('card','online','cash')),
+    payment_id TEXT,
+    payment_status TEXT NOT NULL DEFAULT 'pending'
+        CHECK (payment_status IN ('pending', 'succeeded', 'canceled', 'refunded')),
     comment TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+    FOREIGN KEY (id_bakery) REFERENCES bakeries(id_bakery) ON DELETE SET NULL
+);
+-- =============================================
+-- Пекарни
+-- =============================================
+CREATE TABLE IF NOT EXISTS bakeries (
+    id_bakery INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    phone TEXT,
+    work_hours TEXT,
+    is_active INTEGER NOT NULL DEFAULT 1
 );
 
 -- =============================================

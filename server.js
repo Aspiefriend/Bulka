@@ -27,7 +27,7 @@ const categoriesRoutes = require("./routes/categories");
 const productsRoutes = require("./routes/products");
 const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/orders");
-
+const paymentsRoutes = require("./routes/payments");
 const bakeriesRoutes = require("./routes/bakeries");
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoriesRoutes);
@@ -35,6 +35,7 @@ app.use("/api/products", productsRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/bakeries", bakeriesRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payments", paymentsRoutes);
 
 if (!isProd) {
   app.get("/", (req, res) => {
