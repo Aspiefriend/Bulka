@@ -29,6 +29,7 @@ const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/orders");
 const paymentsRoutes = require("./routes/payments");
 const bakeriesRoutes = require("./routes/bakeries");
+const reviewsRoutes = require("./routes/reviews");
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/products", productsRoutes);
@@ -36,6 +37,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/bakeries", bakeriesRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentsRoutes);
+app.use("/api/reviews", reviewsRoutes);
 
 if (!isProd) {
   app.get("/", (req, res) => {
@@ -81,3 +83,4 @@ app.use((err, req, res, _next) => {
 app.listen(PORT, () => {
   console.log(`[server] listening on http://localhost:${PORT}`);
 });
+require("./cron");
