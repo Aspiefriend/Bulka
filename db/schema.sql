@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS orders (
     payment_id TEXT,
     payment_status TEXT NOT NULL DEFAULT 'pending'
         CHECK (payment_status IN ('pending', 'succeeded', 'canceled', 'refunded')),
+    payment_deadline DATETIME,
     comment TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
