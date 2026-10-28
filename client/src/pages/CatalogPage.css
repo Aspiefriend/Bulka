@@ -10,11 +10,16 @@
   letter-spacing: -0.5px;
   margin-bottom: 24px;
 }
-
 .catalog__categories {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.catalog__categories > * {
+  flex: 0 0 140px;
 }
 
 .catalog__products {
