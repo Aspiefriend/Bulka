@@ -100,6 +100,10 @@ router.post("/", (req, res) => {
     );
     const initialPaymentStatus =
       payment_method === "online" ? "pending" : "succeeded";
+    const paymentDeadline =
+      payment_method === "online"
+        ? new Date(Date.now() + 15 * 60 * 1000).toISOString()
+        : null;
 
     const createOrder = db.transaction(() => {
       const orderResult = db
@@ -107,9 +111,9 @@ router.post("/", (req, res) => {
           `
         INSERT INTO orders (
           id_user, status, total, address, id_bakery,
-          delivery_method, payment_method, payment_status, comment
+          delivery_method, payment_method, payment_status, payment_deadline, comment
         )
-        VALUES (?, 'new', ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, 'new', ?, ?, ?, ?, ?, ?, ?, ?)
       `,
         )
         .run(
@@ -120,6 +124,7 @@ router.post("/", (req, res) => {
           delivery_method,
           payment_method,
           initialPaymentStatus,
+          paymentDeadline,
           comment ? comment.trim() : null,
         );
 
@@ -162,7 +167,7 @@ router.get("/", (req, res) => {
         `
     SELECT 
       o.id_order, o.status, o.total, o.delivery_method,
-      o.payment_method, o.created_at,
+      o.payment_method, o.created_at, o.payment_status, o.payment_deadline,
       (SELECT COUNT(*) FROM order_items WHERE id_order = o.id_order) AS items_count
     FROM orders o
     WHERE o.id_user = ?
