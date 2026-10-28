@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import './OrdersPage.css';
+import CountdownTimer from '../components/CountdownTimer';
 
 const ACTIVE_STATUSES = ['new', 'accepted', 'cooking', 'delivering'];
 
@@ -147,11 +148,18 @@ function OrdersPage() {
                   <span className="orders__number">
                     Заказ №{order.id_order}
                   </span>
-                  <span
-                    className={`orders__status orders__status--${order.status}`}
-                  >
-                    {STATUS_LABELS[order.status]}
-                  </span>
+                  <div className="orders__item-badges">
+                    <span
+                      className={`orders__status orders__status--${order.status}`}
+                    >
+                      {STATUS_LABELS[order.status]}
+                    </span>
+
+                    {order.payment_status === 'pending' &&
+                      new Date(order.payment_deadline) > new Date() && (
+                        <CountdownTimer deadline={order.payment_deadline} />
+                      )}
+                  </div>
                 </div>
                 <div className="orders__item-body">
                   <span className="orders__date">

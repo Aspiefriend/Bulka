@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import './OrderDetailPage.css';
 import '../components/ConfirmDialog.jsx';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
+import CountdownTimer from '../components/CountdownTimer';
 
 const STATUS_LABELS = {
   new: 'Новый',
@@ -51,6 +52,7 @@ function OrderDetailPage() {
 
   const [cancelling, setCancelling] = useState(false);
   const [actionError, setActionError] = useState(null);
+  const [paying, setPaying] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -63,8 +65,44 @@ function OrderDetailPage() {
       .finally(() => setLoading(false));
   }, [id, user]);
 
+  useEffect(() => {
+    if (order && order.payment_status === 'pending') {
+      const timer = setTimeout(async () => {
+        try {
+          const res = await api.post(`/payments/sync/${order.id_order}`);
+          setOrder(res.data);
+        } catch (err) {
+          console.log('Синхронизация не удалась:', err.message);
+        }
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [id]);
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) setPaying(false);
+    };
+
+    window.addEventListener('pageshow', handlePageShow);
+
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
+
   function openConfirm() {
     setConfirmOpen(true);
+  }
+  async function handlePay() {
+    setPaying(true);
+    setActionError(null);
+
+    try {
+      const res = await api.post('/payments', { orderId: order.id_order });
+      window.location.href = res.data.confirmation_url;
+    } catch (err) {
+      setActionError(err.message || 'Ошибка при создании платежа');
+      setPaying(false);
+    }
   }
 
   async function handleCancel() {
@@ -135,6 +173,9 @@ function OrderDetailPage() {
         >
           {STATUS_LABELS[order.status]}
         </span>
+        {order.payment_status === 'pending' && order.payment_deadline && (
+          <CountdownTimer deadline={order.payment_deadline} />
+        )}
       </div>
 
       <section className="order-detail__section">
@@ -180,21 +221,34 @@ function OrderDetailPage() {
           <span>{order.total} ₽</span>
         </div>
       </section>
+      {actionError && (
+        <p className="order-detail__action-error">{actionError}</p>
+      )}
 
-      {canCancel && (
-        <div className="order-detail__actions">
-          {actionError && (
-            <p className="order-detail__action-error">{actionError}</p>
+      <div className="order-detail__actions">
+        {order.payment_status === 'pending' &&
+          new Date(order.payment_deadline) > new Date() && (
+            <button
+              type="button"
+              className="order-detail__pay"
+              onClick={handlePay}
+              disabled={paying}
+            >
+              {paying ? 'Переход к оплате...' : 'Оплатить заказ'}
+            </button>
           )}
+
+        {canCancel && (
           <button
+            type="button"
             className="order-detail__cancel"
             onClick={openConfirm}
-            disabled={cancelling}
+            disabled={cancelling || paying}
           >
             {cancelling ? 'Отменяем...' : 'Отменить заказ'}
           </button>
-        </div>
-      )}
+        )}
+      </div>
       <ConfirmDialog
         open={confirmOpen}
         title="Отменить заказ?"

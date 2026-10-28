@@ -148,7 +148,6 @@
   color: var(--color-primary);
 }
 
-/* ─── Кнопка отмены и ошибка ─── */
 .order-detail__actions {
   display: flex;
   flex-direction: column;
@@ -194,6 +193,27 @@
   color: #c0392b;
   font-size: 15px;
   padding: 16px 0;
+}
+.order-detail__pay {
+  padding: 12px 24px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  width: 100%;
+}
+
+.order-detail__pay:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.order-detail__pay:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 @media (max-width: 640px) {
