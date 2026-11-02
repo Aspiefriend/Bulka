@@ -1,9 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Minus, Plus, Star } from 'lucide-react';
+import { ArrowLeft, Minus, Plus, Star, Heart } from 'lucide-react';
 import { api } from '../api/client';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useFavorites } from '../context/FavoritesContext';
 import './ProductPage.css';
 
 function formatDate(isoString) {
@@ -35,7 +36,7 @@ function ProductPage() {
   const [reviews, setReviews] = useState([]);
   const [reviewsError, setReviewsError] = useState(null);
 
-  const [filterRating, setFilterRating] = useState(0); // 0 = все
+  const [filterRating, setFilterRating] = useState(0);
   const [sortBy, setSortBy] = useState('newest');
   const [displayLimit, setDisplayLimit] = useState(5);
 
@@ -52,6 +53,16 @@ function ProductPage() {
     updateQuantity,
     removeFromCart,
   } = useCart();
+
+  const {
+    loading: favLoading,
+    isFavorite,
+    toggleFavorite,
+    pendingIds: favPendingIds,
+  } = useFavorites();
+
+  const favorite = isFavorite(product?.id_product);
+  const isFavPending = favPendingIds.has(product?.id_product);
 
   const cartItem = cart.find((item) => item.id_product === product?.id_product);
   const quantity = cartItem ? cartItem.quantity : 0;
@@ -78,7 +89,7 @@ function ProductPage() {
   }, [id]);
 
   function handleAdd() {
-    addToCart(product.id_product);
+    addToCart(product.id_product, product);
   }
 
   function handleIncrease() {
@@ -145,7 +156,24 @@ function ProductPage() {
           <img src={product.icon} alt={product.name} />
         </div>
         <div className="product__info">
-          <h1 className="product__name">{product.name}</h1>
+          <div className="product__title-row">
+            <h1 className="product__name">{product.name}</h1>
+
+            <button
+              type="button"
+              className={`product__favorite-btn ${favorite ? 'active' : ''}`}
+              onClick={() => toggleFavorite(product)}
+              disabled={isFavPending || favLoading}
+              aria-label="Добавить в избранное"
+            >
+              <Heart
+                size={28}
+                fill={favorite ? '#c0392b' : 'none'}
+                color={favorite ? '#c0392b' : 'var(--color-text-muted)'}
+              />
+            </button>
+          </div>
+
           <p className="product__description">{product.full_description}</p>
           <span className="product__category">{product.category_name}</span>
           <div className="product__price">{product.price} ₽</div>

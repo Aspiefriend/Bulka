@@ -156,7 +156,7 @@ function OrdersPage() {
                     </span>
 
                     {order.payment_status === 'pending' &&
-                      new Date(order.payment_deadline) > new Date() && (
+                      order.payment_deadline && (
                         <CountdownTimer deadline={order.payment_deadline} />
                       )}
                   </div>

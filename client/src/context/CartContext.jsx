@@ -7,7 +7,10 @@ const CartContext = createContext(null);
 export function CartProvider({ children }) {
   const { user } = useAuth();
 
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const saved = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+    return saved;
+  });
   const [loading, setLoading] = useState(!!user);
   const [error, setError] = useState(null);
   const [pendingIds, setPendingIds] = useState(new Set());
@@ -15,8 +18,10 @@ export function CartProvider({ children }) {
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
+    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+
     if (!user) {
-      setCart([]);
+      setCart(guestCart);
       setLoading(false);
       return;
     }
@@ -24,11 +29,36 @@ export function CartProvider({ children }) {
     setLoading(true);
     setError(null);
 
-    api
-      .get('/cart')
-      .then((res) => setCart(res.data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+    if (guestCart.length > 0) {
+      const itemsToMerge = guestCart.map((item) => ({
+        id_product: item.id_product,
+        quantity: item.quantity,
+      }));
+
+      api
+        .post('/cart/merge', { items: itemsToMerge })
+        .then((res) => {
+          localStorage.removeItem('guest_cart');
+          setCart(res.data);
+          if (res.warning) {
+            setError(res.warning);
+          }
+        })
+        .catch((err) => {
+          setError(
+            `Не удалось синхронизировать корзину. Ошибка сервера: ${err.message}`
+          );
+        })
+        .finally(() => setLoading(false));
+    } else {
+      api
+        .get('/cart')
+        .then((res) => setCart(res.data))
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false));
+    }
+
+    setLoading(false);
   }, [user]);
 
   function startPending(id) {
@@ -47,14 +77,31 @@ export function CartProvider({ children }) {
     });
   }
 
-  async function addToCart(id_product) {
+  async function addToCart(id_product, productData) {
+    if (!user) {
+      setCart((prev) => {
+        const existing = prev.find((item) => item.id_product === id_product);
+        let newCart;
+        if (existing) {
+          newCart = prev.map((item) =>
+            item.id_product === id_product
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          );
+        } else {
+          newCart = [...prev, { ...productData, quantity: 1 }];
+        }
+        localStorage.setItem('guest_cart', JSON.stringify(newCart));
+        return newCart;
+      });
+      return;
+    }
+
     startPending(id_product);
     setError(null);
-
     try {
       const res = await api.post('/cart', { id_product });
       const newItem = res.data;
-
       setCart((prev) => {
         const existing = prev.find((item) => item.id_product === id_product);
         if (existing) {
@@ -72,6 +119,16 @@ export function CartProvider({ children }) {
   }
 
   async function updateQuantity(id_product, quantity) {
+    if (!user) {
+      setCart((prev) => {
+        const newCart = prev.map((item) =>
+          item.id_product === id_product ? { ...item, quantity } : item
+        );
+        localStorage.setItem('guest_cart', JSON.stringify(newCart));
+        return newCart;
+      });
+      return;
+    }
     startPending(id_product);
     setError(null);
 
@@ -92,6 +149,16 @@ export function CartProvider({ children }) {
   }
 
   async function removeFromCart(id_product) {
+    if (!user) {
+      setCart((prev) => {
+        const newCart = prev.map((item) =>
+          item.id_product === id_product ? { ...item, quantity } : item
+        );
+        localStorage.setItem('guest_cart', JSON.stringify(newCart));
+        return newCart;
+      });
+      return;
+    }
     startPending(id_product);
     setError(null);
 

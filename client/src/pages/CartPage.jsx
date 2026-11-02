@@ -5,7 +5,6 @@ import { useCart } from '../context/CartContext';
 import './CartPage.css';
 
 function CartPage() {
-  const { user } = useAuth();
   const { cart, loading, pendingIds, updateQuantity, removeFromCart } =
     useCart();
 
@@ -24,21 +23,6 @@ function CartPage() {
 
   function handleRemove(id_product) {
     removeFromCart(id_product);
-  }
-
-  if (!user) {
-    return (
-      <>
-        <title>Войдите для просмотра — Булка</title>
-        <meta name="robots" content="noindex" />
-        <div className="cart-page">
-          <h1 className="cart-page__title">Корзина</h1>
-          <p className="cart-page__empty">
-            Войдите, чтобы увидеть корзину. <Link to="/login">Войти</Link>
-          </p>
-        </div>
-      </>
-    );
   }
 
   if (loading) {

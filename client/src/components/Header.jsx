@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Package } from 'lucide-react';
+import { ShoppingCart, Package, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import './Header.css';
@@ -30,6 +30,15 @@ function Header() {
               <Package size={22} />
             </Link>
           )}
+
+          <Link
+            to="/favorites"
+            className="header__action-link"
+            aria-label="Избранное"
+          >
+            <Heart size={22} />
+          </Link>
+
           <Link to="/cart" className="header__cart">
             <ShoppingCart size={22} />
             {count > 0 && <span className="header__cart-badge">{count}</span>}

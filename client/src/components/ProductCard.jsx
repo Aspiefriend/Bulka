@@ -1,25 +1,35 @@
 import { Link } from 'react-router-dom';
+import { Heart, Minus, Plus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useFavorites } from '../context/FavoritesContext';
 import './ProductCard.css';
-import { Minus, Plus } from 'lucide-react';
 
 function ProductCard({ product }) {
   const {
     cart,
-    loading,
+    loading: cartLoading,
     addToCart,
     updateQuantity,
     removeFromCart,
     pendingIds,
   } = useCart();
 
+  const {
+    isFavorite,
+    toggleFavorite,
+    pendingIds: favPendingIds,
+  } = useFavorites();
+
   const isPending = pendingIds.has(product.id_product);
+  const isPendingFav = favPendingIds.has(product.id_product);
+
+  const favorite = isFavorite(product.id_product);
 
   const cartItem = cart.find((item) => item.id_product === product.id_product);
   const quantity = cartItem ? cartItem.quantity : 0;
 
   function handleAdd() {
-    addToCart(product.id_product);
+    addToCart(product.id_product, product);
   }
 
   function handleIncrease() {
@@ -36,18 +46,40 @@ function ProductCard({ product }) {
 
   return (
     <div className="product-card">
-      <Link
-        to={`/product/${product.id_product}`}
-        className="product-card__link"
-      >
-        <div className="product-card__image">
+      <div className="product-card__image">
+        <Link
+          to={`/product/${product.id_product}`}
+          className="product-card__image-link"
+        >
           {product.icon ? (
             <img src={product.icon} alt={product.name} />
           ) : (
             <div className="product-card__placeholder" />
           )}
-        </div>
+        </Link>
 
+        <button
+          type="button"
+          className={`product-card__fav-btn ${favorite ? 'active' : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            toggleFavorite(product);
+          }}
+          disabled={isPendingFav}
+          aria-label="Добавить в избранное"
+        >
+          <Heart
+            size={20}
+            fill={favorite ? '#c0392b' : 'none'}
+            color={favorite ? '#c0392b' : '#fff'}
+          />
+        </button>
+      </div>
+
+      <Link
+        to={`/product/${product.id_product}`}
+        className="product-card__link"
+      >
         <div className="product-card__body">
           <h3 className="product-card__name">{product.name}</h3>
           <p className="product-card__description">{product.description}</p>
@@ -62,7 +94,7 @@ function ProductCard({ product }) {
             type="button"
             className="product-card__add"
             onClick={handleAdd}
-            disabled={loading || isPending}
+            disabled={cartLoading || isPending}
           >
             В корзину
           </button>
@@ -72,7 +104,7 @@ function ProductCard({ product }) {
               type="button"
               className="product-card__counter-btn"
               onClick={handleDecrease}
-              disabled={loading || isPending}
+              disabled={cartLoading || isPending}
               aria-label="Уменьшить количество"
             >
               <Minus size={16} />
@@ -82,7 +114,7 @@ function ProductCard({ product }) {
               type="button"
               className="product-card__counter-btn"
               onClick={handleIncrease}
-              disabled={loading || isPending}
+              disabled={cartLoading || isPending}
               aria-label="Увеличить количество"
             >
               <Plus size={16} />

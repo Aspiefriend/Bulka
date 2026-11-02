@@ -99,6 +99,57 @@ router.post("/", (req, res) => {
   }
 });
 
+router.post("/merge", (req, res) => {
+  try {
+    const id_user = req.user.id_user;
+    const { items } = req.body;
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.json({ data: [] });
+    }
+
+    const mergeItem = db.prepare(`
+      INSERT INTO cart_items (id_user, id_product, quantity)
+      SELECT ?, id_product, ? FROM products WHERE id_product = ?
+      ON CONFLICT (id_user, id_product) 
+      DO UPDATE SET quantity = cart_items.quantity + excluded.quantity
+    `);
+
+    const mergeCart = db.transaction((guestItems) => {
+      for (const item of guestItems) {
+        mergeItem.run(id_user, item.quantity, item.id_product);
+      }
+    });
+
+    mergeCart(items);
+
+    const getProducts = db.prepare(`
+      SELECT ci.id_product, ci.quantity, p.price, p.name, p.icon
+      FROM cart_items ci
+      JOIN products p ON p.id_product = ci.id_product
+      WHERE ci.id_user = ?
+    `);
+
+    const updatedCart = getProducts.all(id_user);
+
+    const mergedIds = updatedCart.map((i) => i.id_product);
+    const missingItems = items.filter((i) => !mergedIds.includes(i.id_product));
+
+    let warning = null;
+    if (missingItems.length > 0) {
+      warning =
+        "Некоторые товары были удалены из каталога и не попали в корзину.";
+    }
+
+    res.json({ data: updatedCart, warning });
+  } catch (err) {
+    console.error("[cart] POST /merge", err);
+    res
+      .status(500)
+      .json({ error: { message: "Internal server error", code: "INTERNAL" } });
+  }
+});
+
 router.patch("/:id_product", (req, res) => {
   try {
     const id_user = req.user.id_user;

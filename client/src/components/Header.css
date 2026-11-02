@@ -59,6 +59,19 @@
   gap: 12px;
 }
 
+.header__action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 6px;
+  transition: color 0.15s;
+}
+
+.header__action-link:hover {
+  color: var(--color-primary);
+}
 .header__user {
   color: var(--color-text);
   font-weight: 500;

@@ -30,6 +30,7 @@ const orderRoutes = require("./routes/orders");
 const paymentsRoutes = require("./routes/payments");
 const bakeriesRoutes = require("./routes/bakeries");
 const reviewsRoutes = require("./routes/reviews");
+const favoritesRoutes = require("./routes/favorites");
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/products", productsRoutes);
@@ -38,6 +39,7 @@ app.use("/api/bakeries", bakeriesRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentsRoutes);
 app.use("/api/reviews", reviewsRoutes);
+app.use("/api/favorites", favoritesRoutes);
 
 if (!isProd) {
   app.get("/", (req, res) => {
