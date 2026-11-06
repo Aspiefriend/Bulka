@@ -1,0 +1,43 @@
+.admin-page {
+  min-height: 80vh;
+}
+
+.admin-page .RaLayout-content {
+  padding: 24px;
+}
+.admin__loading {
+  text-align: center;
+  margin-top: 40px;
+}
+.icon-input-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.icon-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-top: 4px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.icon-preview--valid {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.icon-preview--invalid {
+  border-color: #c0392b;
+  background-color: #fdecea;
+  color: #c0392b;
+}
