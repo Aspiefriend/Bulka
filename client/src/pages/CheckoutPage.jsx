@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { MapPin } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import MapModal from '../components/MapModal';
 import './CheckoutPage.css';
 
 function CheckoutPage() {
@@ -13,8 +15,12 @@ function CheckoutPage() {
   const [deliveryMethod, setDeliveryMethod] = useState('delivery');
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [address, setAddress] = useState('');
+  const [apartment, setApartment] = useState('');
   const [idBakery, setIdBakery] = useState(null);
+  const [selectedBakery, setSelectedBakery] = useState(null);
   const [comment, setComment] = useState('');
+
+  const [isMapOpen, setMapOpen] = useState(false);
 
   const [bakeries, setBakeries] = useState([]);
   const [bakeriesLoading, setBakeriesLoading] = useState(false);
@@ -23,21 +29,30 @@ function CheckoutPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (deliveryMethod !== 'pickup') return;
     if (bakeries.length > 0) return;
 
     setBakeriesLoading(true);
     api
       .get('/bakeries')
-      .then((res) => {
-        setBakeries(res.data);
-        if (res.data.length > 0 && !idBakery) {
-          setIdBakery(res.data[0].id_bakery);
-        }
-      })
+      .then((res) => setBakeries(res.data))
       .catch((err) => setError(err.message))
       .finally(() => setBakeriesLoading(false));
-  }, [deliveryMethod, bakeries.length, idBakery]);
+  }, [deliveryMethod, bakeries.length]);
+
+  function handleMapConfirm(payload) {
+    if (payload.id_bakery) {
+      const bakery = bakeries.find((b) => b.id_bakery === payload.id_bakery);
+      setSelectedBakery({
+        id_bakery: payload.id_bakery,
+        name: bakery?.name ?? 'Пекарня',
+        address: payload.address,
+      });
+      setIdBakery(payload.id_bakery);
+    } else {
+      setAddress(payload.address);
+      setApartment('');
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -55,21 +70,33 @@ function CheckoutPage() {
       }
 
       if (deliveryMethod === 'delivery') {
-        payload.address = address.trim();
+        if (!address.trim()) {
+          setError('Выберите адрес доставки на карте.');
+          return;
+        }
+        const apartmentTrimmed = apartment.trim();
+        payload.address = apartmentTrimmed
+          ? `${address.trim()}, ${apartmentTrimmed}`
+          : address.trim();
       } else {
+        if (!idBakery) {
+          setError('Выберите пекарню для самовывоза.');
+          return;
+        }
         payload.id_bakery = idBakery;
       }
 
       const res = await api.post('/orders', payload);
       const id_order = res.data.id_order;
+
+      clearCart();
+
       if (paymentMethod === 'online') {
         const payRes = await api.post('/payments', { orderId: id_order });
         window.location.href = payRes.data.confirmation_url;
-      } else {
-        navigate(`/orders/${id_order}`);
+        return; // важно: не даём коду ниже перебить редирект
       }
 
-      clearCart();
       navigate(`/orders/${id_order}`);
     } catch (err) {
       setError(err.message);
@@ -159,35 +186,80 @@ function CheckoutPage() {
             </div>
 
             {deliveryMethod === 'delivery' ? (
-              <label className="checkout__field">
+              <div className="checkout__field">
                 <span>Адрес доставки</span>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Новосибирск, ул. Ленина, 5, кв. 10"
-                  required
-                />
-              </label>
+
+                {address ? (
+                  <>
+                    <div className="checkout__selected">
+                      <div className="checkout__selected-info">
+                        <MapPin size={18} />
+                        <span>{address}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="checkout__change-btn"
+                        onClick={() => setMapOpen(true)}
+                      >
+                        Изменить
+                      </button>
+                    </div>
+
+                    <input
+                      type="text"
+                      className="checkout__apartment-input"
+                      value={apartment}
+                      onChange={(e) => setApartment(e.target.value)}
+                      placeholder="Квартира / офис (необязательно)"
+                    />
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="checkout__map-btn"
+                    onClick={() => setMapOpen(true)}
+                  >
+                    <MapPin size={18} />
+                    Выбрать адрес на карте
+                  </button>
+                )}
+              </div>
             ) : (
-              <label className="checkout__field">
+              <div className="checkout__field">
                 <span>Выберите пекарню</span>
+
                 {bakeriesLoading ? (
                   <p className="checkout__hint">Загрузка пекарен...</p>
+                ) : selectedBakery ? (
+                  <div className="checkout__selected">
+                    <div className="checkout__selected-info">
+                      <MapPin size={18} />
+                      <div>
+                        <strong>{selectedBakery.name}</strong>
+                        <div className="checkout__selected-sub">
+                          {selectedBakery.address}
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      className="checkout__change-btn"
+                      onClick={() => setMapOpen(true)}
+                    >
+                      Изменить
+                    </button>
+                  </div>
                 ) : (
-                  <select
-                    value={idBakery ?? ''}
-                    onChange={(e) => setIdBakery(Number(e.target.value))}
-                    required
+                  <button
+                    type="button"
+                    className="checkout__map-btn"
+                    onClick={() => setMapOpen(true)}
                   >
-                    {bakeries.map((b) => (
-                      <option key={b.id_bakery} value={b.id_bakery}>
-                        {b.name} — {b.address}
-                      </option>
-                    ))}
-                  </select>
+                    <MapPin size={18} />
+                    Выбрать пекарню на карте
+                  </button>
                 )}
-              </label>
+              </div>
             )}
           </section>
 
@@ -253,6 +325,15 @@ function CheckoutPage() {
             {submitting ? 'Оформляем...' : 'Оформить заказ'}
           </button>
         </form>
+
+        <MapModal
+          isOpen={isMapOpen}
+          mode={deliveryMethod}
+          bakeries={bakeries}
+          initialAddress={deliveryMethod === 'delivery' ? address : ''}
+          onClose={() => setMapOpen(false)}
+          onConfirm={handleMapConfirm}
+        />
       </div>
     </>
   );
