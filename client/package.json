@@ -10,8 +10,12 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@mr-igorinni/react-yandex-maps-fork": "^1.2.6-react19",
+    "@react-oauth/google": "^0.13.5",
     "lucide-react": "^1.52.0",
+    "ra-data-simple-rest": "^5.15.5",
     "react": "^19.2.8",
+    "react-admin": "^5.15.5",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"
   },
