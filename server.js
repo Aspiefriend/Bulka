@@ -12,6 +12,7 @@ if (!isProd) {
     cors({
       origin: process.env.CLIENT_URL || "http://localhost:5173",
       credentials: true,
+      exposedHeaders: ["Content-Range"],
     }),
   );
 }
@@ -31,6 +32,7 @@ const paymentsRoutes = require("./routes/payments");
 const bakeriesRoutes = require("./routes/bakeries");
 const reviewsRoutes = require("./routes/reviews");
 const favoritesRoutes = require("./routes/favorites");
+const adminRoutes = require("./routes/admin");
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/products", productsRoutes);
@@ -40,6 +42,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentsRoutes);
 app.use("/api/reviews", reviewsRoutes);
 app.use("/api/favorites", favoritesRoutes);
+app.use("/api/admin", adminRoutes);
 
 if (!isProd) {
   app.get("/", (req, res) => {
