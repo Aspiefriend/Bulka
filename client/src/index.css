@@ -51,7 +51,6 @@ ul {
   list-style: none;
 }
 
-/* Общий контейнер */
 .container {
   max-width: var(--container);
   margin: 0 auto;

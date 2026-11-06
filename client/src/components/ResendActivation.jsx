@@ -30,7 +30,7 @@ function ResendActivation({ email, password }) {
       ) : (
         <>
           <p className="resend-activation__text">
-            Не получили письмо или не получилось отправить? Отправьте ещё раз
+            Не получили письмо или ссылка невалидна? Отправьте ещё раз
           </p>
           <button
             type="button"
