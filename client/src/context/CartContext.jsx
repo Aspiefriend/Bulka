@@ -151,9 +151,7 @@ export function CartProvider({ children }) {
   async function removeFromCart(id_product) {
     if (!user) {
       setCart((prev) => {
-        const newCart = prev.map((item) =>
-          item.id_product === id_product ? { ...item, quantity } : item
-        );
+        const newCart = prev.filter((item) => item.id_product !== id_product);
         localStorage.setItem('guest_cart', JSON.stringify(newCart));
         return newCart;
       });
