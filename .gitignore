@@ -21,3 +21,5 @@ Thumbs.db
 
 .cache/
 .vite/
+deploy/certs/
+deploy/data/
