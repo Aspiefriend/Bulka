@@ -122,14 +122,20 @@
   justify-content: center;
   width: 100%;
   margin-bottom: 24px;
+  overflow: hidden;
 }
 
 .login__google > div {
   width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
 }
 
 .login__google iframe {
   width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  height: 44px !important;
   border-radius: var(--radius) !important;
   box-shadow: none !important;
 }

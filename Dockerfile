@@ -7,6 +7,10 @@ COPY client/package*.json ./
 RUN npm ci
 
 COPY client/ ./
+ARG VITE_GOOGLE_CLIENT_ID
+ARG VITE_YMAPS_APIKEY
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
+ENV VITE_YMAPS_APIKEY=$VITE_YMAPS_APIKEY
 RUN npm run build
 
 # ─── Stage 2: финальный образ ───
@@ -35,4 +39,4 @@ RUN mkdir -p /app/data && chown -R node:node /app/data
 
 USER node
 
-CMD ["sh", "-c", "node init-db.js && node server.js"]
+CMD ["sh", "-c", "node db/init-db.js && node server.js"]

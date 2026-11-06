@@ -30,7 +30,7 @@ router.get("/", (req, res) => {
         });
       }
 
-      query += "AND WHERE p.id_category = ?";
+      query += "WHERE p.id_category = ?";
       params.push(categoryId);
     }
 
@@ -64,7 +64,7 @@ router.get("/hits", (req, res) => {
           c.icon AS category_icon
         FROM products p
         LEFT JOIN categories c ON p.id_category = c.id_category
-        WHERE p.is_active = 1 AND (c.is_active = 1 OR c.is_active = NULL)
+        WHERE p.is_active = 1 AND (c.is_active = 1 OR c.is_active is NULL)
         ORDER BY p.sales_count DESC
         LIMIT ?
       `,

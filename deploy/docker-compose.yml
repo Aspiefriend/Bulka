@@ -1,13 +1,19 @@
 services:
   app:
-    build: ..
+    build:
+      context: ..
+      args:
+        - VITE_GOOGLE_CLIENT_ID=410066798528-slbtul04234f10pdl2b9j2pk2d3alo01.apps.googleusercontent.com
+        - VITE_YMAPS_APIKEY=91e3628f-9adc-49d0-9616-21db7504f79d
+        - VITE_GEOCODE_APIKEY=91e3628f-9adc-49d0-9616-21db7504f79d
     env_file:
       - ../.env
+    user: "node"
     environment:
       - DB_PATH=/app/data/bulka.db
       - NODE_ENV=production
     volumes:
-      - ./data:/app/data
+      - db_data:/app/data
     restart: unless-stopped
 
   nginx:
@@ -21,3 +27,6 @@ services:
     depends_on:
       - app
     restart: unless-stopped
+
+volumes:
+  db_data:
