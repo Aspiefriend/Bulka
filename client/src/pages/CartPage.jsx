@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Minus, Plus, X } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import './CartPage.css';
 

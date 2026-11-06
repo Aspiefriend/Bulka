@@ -11,6 +11,7 @@ function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
