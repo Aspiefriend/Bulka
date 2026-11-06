@@ -1,0 +1,59 @@
+.resend-activation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.resend-activation__text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.resend-activation__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-primary);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-main);
+}
+
+.resend-activation__btn:hover:not(:disabled) {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.resend-activation__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.resend-activation__success {
+  color: #2e7d32;
+  font-weight: 600;
+  margin: 0;
+  font-size: 14px;
+}
+
+.resend-activation__error {
+  color: #c0392b;
+  margin: 0;
+  font-size: 13px;
+}
