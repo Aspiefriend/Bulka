@@ -16,10 +16,16 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS users (
     id_user INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
+    password TEXT,
     name TEXT NOT NULL,
     is_admin INTEGER NOT NULL DEFAULT 0 ,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_active INTEGER NOT NULL DEFAULT 0,
+    is_blocked INTEGER NOT NULL DEFAULT 0,
+    activation_token TEXT,
+    activation_deadline DATETIME,
+    google_id TEXT UNIQUE,
+    is_send INTEGER NOT NULL DEFAULT 0
 );
 -- =============================================
 -- Адреса
@@ -38,7 +44,8 @@ CREATE TABLE IF NOT EXISTS addresses (
 CREATE TABLE IF NOT EXISTS categories (
     id_category INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    icon TEXT
+    icon TEXT,
+    is_active INTEGER NOT NULL DEFAULT 1
 );
 
 -- =============================================
@@ -54,6 +61,7 @@ CREATE TABLE IF NOT EXISTS products (
     id_category INTEGER,
     sales_count INTEGER NOT NULL DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_active INTEGER NOT NULL DEFAULT 1,
     FOREIGN KEY (id_category) REFERENCES categories(id_category) ON DELETE SET NULL
 );
 
@@ -90,7 +98,10 @@ CREATE TABLE IF NOT EXISTS bakeries (
     address TEXT NOT NULL,
     phone TEXT,
     work_hours TEXT,
-    is_active INTEGER NOT NULL DEFAULT 1
+    is_active INTEGER NOT NULL DEFAULT 1,
+    latitude REAL NOT NULL,
+    longitude REAL NOT NULL,
+    photo TEXT
 );
 
 -- =============================================
@@ -144,7 +155,9 @@ CREATE TABLE IF NOT EXISTS notifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
 );
-
+-- =============================================
+-- Состав корзины
+-- =============================================
 CREATE TABLE IF NOT EXISTS cart_items (
     id_cart_item INTEGER PRIMARY KEY AUTOINCREMENT,
     id_user INTEGER  NOT NULL,
