@@ -18,6 +18,7 @@ function Header() {
         <nav className="header__nav">
           <Link to="/">Главная</Link>
           <Link to="/catalog">Каталог</Link>
+          <Link to="/bakeries">Пекарни</Link>
         </nav>
 
         <div className="header__actions">

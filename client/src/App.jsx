@@ -12,6 +12,9 @@ import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
 import FavoritesPage from './pages/FavoritesPage';
+import AdminPage from './pages/AdminPage';
+import BakeriesPage from './pages/BakeriesPage';
+import ActivatePage from './pages/ActivatePage';
 function App() {
   return (
     <BrowserRouter>
@@ -31,6 +34,9 @@ function App() {
               <Route path="/orders" element={<OrdersPage />} />
               <Route path="/orders/:id" element={<OrderDetailPage />} />
               <Route path="/favorites" element={<FavoritesPage />} />
+              <Route path="/admin//*" element={<AdminPage />} />
+              <Route path="/bakeries" element={<BakeriesPage />} />
+              <Route path="/activate" element={<ActivatePage />} />
             </Routes>
           </div>
         </main>
