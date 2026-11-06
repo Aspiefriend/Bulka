@@ -1,16 +1,20 @@
-const express = require('express');
-const db = require('../db/db');
+const express = require("express");
+const db = require("../db/db");
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get("/", (req, res) => {
   try {
-    const categories = db.prepare('SELECT * FROM categories ORDER BY categories.id_category').all();
+    const categories = db
+      .prepare(
+        "SELECT * FROM categories WHERE  categories.is_active = 1 ORDER BY categories.id_category",
+      )
+      .all();
     res.json({ data: categories });
   } catch (err) {
-    console.error('[categories] GET /', err);
+    console.error("[categories] GET /", err);
     res.status(500).json({
-      error: { message: 'Internal server error', code: 'INTERNAL' },
+      error: { message: "Internal server error", code: "INTERNAL" },
     });
   }
 });

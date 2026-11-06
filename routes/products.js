@@ -1,5 +1,5 @@
-const express = require('express');
-const db = require('../db/db');
+const express = require("express");
+const db = require("../db/db");
 
 const router = express.Router();
 
@@ -11,9 +11,10 @@ const PRODUCT_SELECT = `
     c.icon AS category_icon
   FROM products p
   LEFT JOIN categories c ON p.id_category = c.id_category
+  WHERE p.is_active = 1 AND (c.is_active = 1 OR c.is_active is NULL)
 `;
 
-router.get('/', (req, res) => {
+router.get("/", (req, res) => {
   try {
     const { category } = req.query;
 
@@ -25,36 +26,37 @@ router.get('/', (req, res) => {
 
       if (!Number.isInteger(categoryId) || categoryId <= 0) {
         return res.status(400).json({
-          error: { message: 'Invalid category id', code: 'VALIDATION' },
+          error: { message: "Invalid category id", code: "VALIDATION" },
         });
       }
 
-      query += ' WHERE p.id_category = ?';
+      query += "AND WHERE p.id_category = ?";
       params.push(categoryId);
     }
 
-    query += ' ORDER BY p.id_product';
+    query += "ORDER BY p.id_product";
 
     const products = db.prepare(query).all(...params);
     res.json({ data: products });
-
-
   } catch (err) {
-    console.error('[products] GET /', err);
+    console.error("[products] GET /", err);
     res.status(500).json({
-      error: { message: 'Internal server error', code: 'INTERNAL' },
+      error: { message: "Internal server error", code: "INTERNAL" },
     });
   }
 });
 
-router.get('/hits', (req, res) => {
+router.get("/hits", (req, res) => {
   try {
-    const limit = Number(req.query.limit) || 4
+    const limit = Number(req.query.limit) || 4;
     if (!Number.isInteger(limit) || limit <= 0 || limit > 20) {
-      return res.status(400).json({ error: { message: 'Invalid limit', code: 'VALIDATION' } })
-
+      return res
+        .status(400)
+        .json({ error: { message: "Invalid limit", code: "VALIDATION" } });
     }
-    const products = db.prepare(`
+    const products = db
+      .prepare(
+        `
         SELECT
           p.id_product, p.name, p.description, p.price, p.icon, p.sales_count,
           p.id_category,
@@ -62,49 +64,48 @@ router.get('/hits', (req, res) => {
           c.icon AS category_icon
         FROM products p
         LEFT JOIN categories c ON p.id_category = c.id_category
+        WHERE p.is_active = 1 AND (c.is_active = 1 OR c.is_active = NULL)
         ORDER BY p.sales_count DESC
         LIMIT ?
-      `).all(limit)
+      `,
+      )
+      .all(limit);
 
-    res.json({ data: products })
+    res.json({ data: products });
+  } catch (err) {
+    console.error("[products] GET /hits", err);
+    res
+      .status(500)
+      .json({ error: { message: "Internal server error", code: "INTERNAL" } });
   }
-  catch (err) {
-    console.error('[products] GET /hits', err)
-    res.status(500).json({ error: { message: 'Internal server error', code: 'INTERNAL' } })
-
-  }
-
-
 });
 
-
-router.get('/:id', (req, res) => {
+router.get("/:id", (req, res) => {
   try {
     const id = Number(req.params.id);
     if (!Number.isInteger(id) || id <= 0) {
       return res.status(400).json({
-        error: { message: 'Invalid product id', code: 'VALIDATION' },
+        error: { message: "Invalid product id", code: "VALIDATION" },
       });
     }
 
     const product = db
-      .prepare(`${PRODUCT_SELECT} WHERE p.id_product = ?`)
+      .prepare(`${PRODUCT_SELECT}  AND p.id_product = ?`)
       .get(id);
 
     if (!product) {
       return res.status(404).json({
-        error: { message: 'Product not found', code: 'NOT_FOUND' },
+        error: { message: "Product not found", code: "NOT_FOUND" },
       });
     }
 
     res.json({ data: product });
   } catch (err) {
-    console.error('[products] GET /:id', err);
+    console.error("[products] GET /:id", err);
     res.status(500).json({
-      error: { message: 'Internal server error', code: 'INTERNAL' },
+      error: { message: "Internal server error", code: "INTERNAL" },
     });
   }
 });
 
 module.exports = router;
-

@@ -6,7 +6,9 @@ const router = express.Router();
 router.get("/", (req, res) => {
   try {
     const bakeries = db
-      .prepare("SELECT * FROM bakeries ORDER BY bakeries.id_bakery")
+      .prepare(
+        "SELECT * FROM bakeries WHERE bakeries.is_active = 1 ORDER BY bakeries.id_bakery",
+      )
       .all();
     res.json({ data: bakeries });
   } catch (err) {
