@@ -31,5 +31,8 @@ ENV NODE_ENV=production
 ENV DB_PATH=/app/data/bulka.db
 
 EXPOSE 3000
+RUN mkdir -p /app/data && chown -R node:node /app/data
+
+USER node
 
 CMD ["sh", "-c", "node init-db.js && node server.js"]
