@@ -2,13 +2,12 @@ const API_BASE = '/api';
 
 async function request(path, options = {}) {
   const url = `${API_BASE}${path}`;
-  const token = localStorage.getItem('token');
 
   const config = {
     ...options,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
   };

@@ -8,10 +8,17 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const hasPendingLogout = localStorage.getItem('pending_logout');
+    if (hasPendingLogout) {
+      api
+        .post('/auth/logout')
+        .then(() => {
+          localStorage.removeItem('pendig_logout');
+        })
+        .catch((err) => {
+          console.error(`При перемонтировке не удалось очистить куку ${err}`);
+        });
 
-    if (!token) {
-      setLoading(false);
       return;
     }
 
@@ -22,7 +29,6 @@ export function AuthProvider({ children }) {
       })
       .catch((err) => {
         if (err.code === 'UNAUTHORIZED' || err.code === 'ACCOUNT_BLOCKED') {
-          localStorage.removeItem('token');
           setUser(null);
         }
       })
@@ -33,15 +39,15 @@ export function AuthProvider({ children }) {
 
   async function login(email, password) {
     const res = await api.post('/auth/login', { email, password });
-    localStorage.setItem('token', res.data.token);
     setUser(res.data.user);
+    localStorage.removeItem('pending_logout');
     return res.data.user;
   }
 
   async function loginWithGoogle(credential) {
     const res = await api.post('/auth/google', { credential });
-    localStorage.setItem('token', res.data.token);
     setUser(res.data.user);
+    localStorage.removeItem('pending_logout');
     return res.data.user;
   }
 
@@ -50,9 +56,14 @@ export function AuthProvider({ children }) {
     return res.data;
   }
 
-  function logout() {
-    localStorage.removeItem('token');
+  async function logout() {
     setUser(null);
+    try {
+      await api.post('auth/logout');
+    } catch (err) {
+      console.error(`Ошибка сервера при выходе ${err} `);
+      localStorage.setItem('pending_logout', 'yes');
+    }
   }
 
   const value = { user, loading, login, loginWithGoogle, register, logout };
